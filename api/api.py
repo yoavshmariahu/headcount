@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, session
+from flask import Flask, request, render_template, redirect, url_for, session, jsonify
 
 from pyrebase import pyrebase
 import time
@@ -109,11 +109,18 @@ def done_shopping(name):
 @app.route('/people/<name>', methods=["GET"])
 def get_people(name):
     people = db.child("stores").child(name).child("people").get(user['idToken']).val()
-    response = flask.jsonify({'people': people})
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    response = jsonify({'people': people})
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:19006')
     return response
 
+@app.route('/get-num-stores', methods=["GET"])
+def num_of_stores():
+    stores = db.child("stores").child("number").get(user['idToken']).val()
+    return {"num_of_stores": stores}
 
-@app.route('/time')
-def get_current_time():
-    return {'time': time.time()}
+@app.route('/get-all-stores', methods=["GET"])
+def get_stores():
+    stores = dict(db.child("stores").get(user['idToken']).val())
+    response = jsonify(stores)
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:19006')
+    return response

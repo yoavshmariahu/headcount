@@ -4,15 +4,15 @@ import MapContainer from './Map';
 
 
 function App() {
-  const [currentPeople, setCurrentPeople] = useState(0);
+  const [currentStores, setCurrentStores] = useState(0);
 
-  useEffect(() => {
-    fetch('http://localhost:5000/people/trader-joes-1').then(res => res.json()).then(data => {
-      setCurrentPeople(data.people);
-    });
-  }, []);
+    useEffect(() => {
+        fetch('http://127.0.0.1:5000/get-all-stores').then(res => res.json()).then(data => {
+      setCurrentStores(data);
+        });
+     }, []);
 
-  console.log(currentPeople)
+    console.log(currentStores)
 
   return (
     <View style={styles.container}>
