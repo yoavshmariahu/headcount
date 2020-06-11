@@ -26,6 +26,7 @@ export default class MapContainer extends Component {
           subtitle: '1234 Foo Drive'
         },
       ],
+      stores: [],
     };
   }
   componentDidMount() {
@@ -43,6 +44,11 @@ export default class MapContainer extends Component {
       (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
     );
+    fetch('http://127.0.0.1:5000//get-markers-info').then(res => res.json()).then(data => {
+      this.setState({
+        stores: data
+      })
+    });
   }
 
   render() {

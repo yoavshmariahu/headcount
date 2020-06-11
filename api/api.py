@@ -136,5 +136,5 @@ def get_markers():
 
 
     response = jsonify(markers)
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:19006')
+    response.headers.add('Access-Control-Allow-Origin', '*')
     return response

@@ -4,20 +4,9 @@ import MapContainer from './Map';
 
 
 function App() {
-  const [currentStores, setCurrentStores] = useState(0);
-
-    useEffect(() => {
-        fetch('http://127.0.0.1:5000/get-all-stores').then(res => res.json()).then(data => {
-      setCurrentStores(data);
-        });
-     }, []);
-
-    console.log(currentStores)
 
   return (
-    <View style={styles.container}>
-      <MapContainer/>
-    </View>
+    <MapContainer/>
   );
 }
 
