@@ -1,74 +1,25 @@
-import React, {Component} from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import React, { useState, useEffect, Component } from 'react';
+import { Platform, StyleSheet, Text, View, Dimensions } from 'react-native';
+import MapContainer from './Map';
 
-export default class App extends Component {
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      region: null,
-      markers: [
-        {
-          coordinate: {
-            latitude: 37.221340,
-            longitude: -121.97963,
-          },
-          title: 'Los Gatos',
-          subtitle: '1234 Foo Drive'
-        },
-        {
-          coordinate: {
-            latitude: 37.3230,
-            longitude: -122.0322,
-          },
-          title: 'Cupertino',
-          subtitle: '1234 Foo Drive'
-        },
-      ],
-    };
-  }
-  componentDidMount() {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        this.setState({
-          region: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
-            latitudeDelta: 0.03,
-            longitudeDelta: 0.03,
-          }
-        });
-      },
-      (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
-    );
-  }
+function App() {
+  const [currentPeople, setCurrentPeople] = useState(0);
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <MapView 
-          style={styles.mapStyle} 
-          region={this.state.region}
-          onRegionChange={this.onRegionChange}
-        >
-          {this.state.markers.map(marker => (
-            <Marker
-              coordinate={marker.coordinate}
-              title={marker.title}
-              description={marker.subtitle}
-            >
-              <View style={styles.marker}>
-                <Text style={styles.text}>{marker.title}</Text>
-              </View>
-            </Marker>
-          ))}
-        </MapView>
-      </View>
-    );
-  }
-};
+  useEffect(() => {
+    fetch('http://localhost:5000/people/trader-joes-1').then(res => res.json()).then(data => {
+      setCurrentPeople(data.people);
+    });
+  }, []);
+
+  console.log(currentPeople)
+
+  return (
+    <View style={styles.container}>
+      <MapContainer/>
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -91,3 +42,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   }
 });
+
+export default App;
