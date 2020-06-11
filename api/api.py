@@ -124,3 +124,17 @@ def get_stores():
     response = jsonify(stores)
     response.headers.add('Access-Control-Allow-Origin', 'http://localhost:19006')
     return response
+
+@app.route('/get-markers-info', methods=["GET"])
+def get_markers():
+    stores = dict(db.child("stores").get(user['idToken']).val())
+    num_stores = stores.pop('number')
+    markers = []
+    for name, info in stores.items():
+        marker = {'coordinate': {'latitude': info['latitude'], 'longitude': info['longitude']}, 'title': name, 'subtitle': info['people']}
+        markers.append(marker)
+
+
+    response = jsonify(markers)
+    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:19006')
+    return response
