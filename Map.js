@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import GoogleMapReact from 'google-map-react';
-var googleMapsAPIKey = 'AIzaSyDHvKuzXq8mAJpTe6ZMvcau0Y4R_7VvTHA'; 
+import { googleMapsAPIKey } from './constants'
 
-const AnyReactComponent = ({ text }) => <div>{text}</div>;
+console.log(googleMapsAPIKey)
  
 export default class MapContainer extends Component {
   constructor(props) {
