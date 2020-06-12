@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, session, jsonify
 
 from pyrebase import pyrebase
-import time
 
 import random
 import string
@@ -15,7 +14,7 @@ config = {
   "databaseURL": "https://headcount-2a70b.firebaseio.com/",
   "projectId": "headcount-2a70b",
   "storageBucket": "headcount.appspot.com",
-  "serviceAccount": "headcount-key.json",
+  "serviceAccount": "/home/nikashkhanna/mysite/headcount-key.json",
   "messagingSenderId": "430271769046"
 }
 
@@ -57,7 +56,7 @@ def check_in(name):
     return redirect(url_for('update_check_in', name=name))
 
 
-@app.route('/check-in/<name>/', methods=["GET"])
+@app.route('/update-check-in/<name>/', methods=["GET"])
 def update_check_in(name):
     userID = session['userID']
 
@@ -106,32 +105,13 @@ def shopping(name):
 def done_shopping(name):
     return render_template("done.html")
 
-@app.route('/people/<name>', methods=["GET"])
-def get_people(name):
-    people = db.child("stores").child(name).child("people").get(user['idToken']).val()
-    response = jsonify({'people': people})
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:19006')
-    return response
-
-@app.route('/get-num-stores', methods=["GET"])
-def num_of_stores():
-    stores = db.child("stores").child("number").get(user['idToken']).val()
-    return {"num_of_stores": stores}
-
-@app.route('/get-all-stores', methods=["GET"])
-def get_stores():
-    stores = dict(db.child("stores").get(user['idToken']).val())
-    response = jsonify(stores)
-    response.headers.add('Access-Control-Allow-Origin', 'http://localhost:19006')
-    return response
-
 @app.route('/get-markers-info', methods=["GET"])
 def get_markers():
     stores = dict(db.child("stores").get(user['idToken']).val())
     num_stores = stores.pop('number')
     markers = []
     for name, info in stores.items():
-        marker = {'coordinate': {'latitude': info['latitude'], 'longitude': info['longitude']}, 'title': name, 'subtitle': info['people']}
+        marker = {'latitude': info['latitude'], 'longitude': info['longitude'], 'title': info['name'], 'subtitle': info['people'], 'key': name}
         markers.append(marker)
 
 

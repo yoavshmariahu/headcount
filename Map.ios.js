@@ -3,30 +3,18 @@ import { StyleSheet, Text, View, Dimensions } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 
 export default class MapContainer extends Component {
+
   constructor(props) {
+
     super(props);
 
+
     this.state = {
-      region: null,
-      markers: [
-        {
-          coordinate: {
-            latitude: 37.221340,
-            longitude: -121.97963,
-          },
-          title: 'Los Gatos',
-          subtitle: '1234 Foo Drive'
-        },
-        {
-          coordinate: {
-            latitude: 37.3230,
-            longitude: -122.0322,
-          },
-          title: 'Cupertino',
-          subtitle: '1234 Foo Drive'
-        },
-      ],
       stores: [],
+        loading: true,
+      region: null,
+
+
     };
   }
   componentDidMount() {
@@ -34,24 +22,34 @@ export default class MapContainer extends Component {
       (position) => {
         this.setState({
           region: {
-            latitude: position.coords.latitude,
-            longitude: position.coords.longitude,
+            latitude: parseFloat(position.coords.latitude),
+            longitude: parseFloat(position.coords.longitude),
             latitudeDelta: 0.03,
             longitudeDelta: 0.03,
-          }
+          },
+
         });
       },
       (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: false, timeout: 200000, maximumAge: 1000 },
     );
-    fetch('http://127.0.0.1:5000//get-markers-info').then(res => res.json()).then(data => {
+    fetch('http://nikashkhanna.pythonanywhere.com/get-markers-info').then(response => response.json()).then(data => {
       this.setState({
-        stores: data
+        stores: data,
+        loading: false,
       })
+
     });
+
   }
 
   render() {
+
+
+      const { loading, region } = this.state;
+        if (loading)
+            return null
+      //console.log(this.state.stores)
     return (
       <View style={styles.container}>
         <MapView 
@@ -59,14 +57,15 @@ export default class MapContainer extends Component {
           region={this.state.region}
           onRegionChange={this.onRegionChange}
         >
-          {this.state.markers.map(marker => (
+          {this.state.stores.map(marker => (
             <Marker
-              coordinate={marker.coordinate}
+              coordinate={{latitude: marker.latitude, longitude: marker.longitude}}
               title={marker.title}
-              description={marker.subtitle}
+              description={marker.subtitle.toString()}
             >
               <View style={styles.marker}>
                 <Text style={styles.text}>{marker.title}</Text>
+                <Text style={styles.text}>People: {marker.subtitle.toString()}</Text>
               </View>
             </Marker>
           ))}
