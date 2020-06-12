@@ -82,17 +82,26 @@ displayMarkers (stores) {
 
 
   componentDidMount() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        this.setState({
+    let currentComponent = this;
+    if ('geolocation' in navigator) {
+
+      navigator.geolocation.getCurrentPosition(function(position)  {
+        currentComponent.setState({
           region: {
             lat: parseFloat(position.coords.latitude),
             lng: parseFloat(position.coords.longitude)
           },
           loading: false
         })
-      })
-    }
+      }, function(error) {
+          currentComponent.setState({
+          region: {
+            lat: 37.3230,
+            lng: -122.0322
+          },
+          loading: false}
+          )}
+          )}
 
     fetch('http://nikashkhanna.pythonanywhere.com/get-markers-info').then(res => res.json()).then(data => {
       this.setState({

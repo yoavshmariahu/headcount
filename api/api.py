@@ -14,7 +14,7 @@ config = {
   "databaseURL": "https://headcount-2a70b.firebaseio.com/",
   "projectId": "headcount-2a70b",
   "storageBucket": "headcount.appspot.com",
-  "serviceAccount": "/home/nikashkhanna/mysite/headcount-key.json",
+  "serviceAccount": "headcount-key.json",
   "messagingSenderId": "430271769046"
 }
 
